@@ -1,3 +1,4 @@
+#!/usr/local/bin/python2.6
 """
 Running this file will dispatch a request to the Find My iPhone API
 and write the resulting location into a database.
