@@ -7,7 +7,7 @@ be present in the environment as environment variables.
 """
 import os
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from findi import FindMyIPhone
 from sqlalchemy import Column, String, Integer, create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -36,8 +36,8 @@ class Location(Base):
     id = Column(Integer, primary_key=True)
     latitude = Column(String)
     longitude = Column(String)
-    date = Column(String, default=datetime.utcnow,
-                  onupdate=datetime.utcnow)
+    date = Column(String, default=datetime.today,
+                  onupdate=datetime.today)
 
     def __repr__(self):
         return "<Location('%s','%s', '%s')>" % (self.latitude, self.longitude, self.date)
@@ -45,8 +45,9 @@ class Location(Base):
 
 def store_location():
     "Fetches an iPhone location from the Apple API and creates a Location Object"
-    iphone = FindMyIPhone(APPLE_EMAIL, APPLE_PASSWORD)
-    iphone_location = iphone.locate()
+    iDevices = FindMyIPhone(APPLE_EMAIL, APPLE_PASSWORD)
+    # my phone is the 4th device (index 3) in the list
+    iphone_location = iDevices.locate(device_num=3)
 
     location = Location()
     location.latitude = iphone_location.get('latitude')
